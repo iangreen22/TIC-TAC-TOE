@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOXO</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="h-screen flex flex-col justify-center items-center gap-10">
+            <h1 class="text-3xl"> {{message}}</h1>
+            <div class="grid grid-cols-3 bg-zinc-500 p-2">
+                <div v-for="(row, rowIndex) in boardCells" :key="rowIndex">
+                    <div v-for="(cell, colIndex) in row" :key="colIndex"
+                        class="bg-zinc-200 mx-1 my-2 h-30 w-30 hover:bg-zinc-100 flex justify-center items-center text-5xl font-bold"
+                        @click="cellClick(rowIndex,colIndex)" :class="{'text-red-500': cell === 'X',
+                                 'text-lime-500': cell === 'O', 
+                                 'cursor-not-allowed': cell !== '' || winner}">
+                        {{cell}}
+                    </div>
+
+                </div>
+            </div>
+            <button @click="restartGame"
+                class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-300">Restart</button>
+        </div>
+
+    </div>
+    <script>
+        Vue.createApp({
+
+            data() {
+                return {
+                    boardCells: [
+                        ["", "", ""],
+                        ["", "", ""],
+                        ["", "", ""]
+                    ],
+                    message: "Player X's Turn!",
+                    currentPlayer: 'X',
+                    winner: null,
+                }
+            },
+            methods: {
+                cellClick(row, col) {
+                    if (this.boardCells[row][col] !== "" || this.winner) {
+                        return;
+                    }
+
+                    this.boardCells[row][col] = this.currentPlayer;
+
+                    if (this.isWinner(this.currentPlayer)) {
+                            this.winner = this.currentPlayer;
+                            this.message = `Player ${this.winner} wins!`;
+
+                    }else if(this.isDraw(this.currentPlayer)){
+                            this.message = 'Draw!'
+                    }
+                     else {
+                        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+                        this.message = `Player ${this.currentPlayer}'s Turn!`;
+                    }
+                },
+
+                isWinner(user) {
+                    // ROW
+                    for (let row = 0; row < this.boardCells.length; row++) {
+                        if (this.boardCells[row][0] == user
+                            && this.boardCells[row][1] == user
+                            && this.boardCells[row][2] == user) {
+                            return true;
+                        }
+                    }
+                    // COL
+                    for (let col = 0; col < this.boardCells.length; col++) {
+                        if (this.boardCells[0][col] == user
+                            && this.boardCells[1][col] == user
+                            && this.boardCells[2][col] == user) {
+                            return true;
+                        }
+                    }
+                    // DIAGONAL
+                    if (this.boardCells[0][0] == user
+                        && this.boardCells[1][1] == user
+                        && this.boardCells[2][2] == user) {
+                        return true;
+                    }
+                    if (this.boardCells[0][2] == user
+                        && this.boardCells[1][1] == user
+                        && this.boardCells[2][0] == user) {
+                        return true;
+                    }
+                    return false;
+                },
+
+                restartGame() {
+                    this.boardCells = [
+                        ["", "", ""],
+                        ["", "", ""],
+                        ["", "", ""]
+                    ];
+                    this.currentPlayer = 'X';
+                    this.winner = null;
+                    this.message = "Player X's Turn!";
+
+                },
+               
+                isDraw() {
+                    for (let row = 0; row < 3; row++) {
+                        for (let col = 0; col < 3; col++) {
+                            if (this.boardCells[row][col] === '') {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            },
+        }).mount("#app");
+    </script>
+</body>
+
+</html>

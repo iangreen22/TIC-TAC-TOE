@@ -11,9 +11,10 @@
 
 <body>
     <div id="app">
-        <div class="h-screen flex flex-col justify-center items-center gap-10">
-            <h1 class="text-3xl"> {{message}}</h1>
-            <div class="grid grid-cols-3 bg-zinc-500 p-2">
+        <div
+            class="h-screen flex flex-col justify-center items-center gap-10 bg-[url('https://mir-s3-cdn-cf.behance.net/project_modules/source/cfc157151010897.630605bae2329.gif')] bg-cover bg-center">
+            <h1 class="text-3xl text-white font-bold font-mono"> {{message}}</h1>
+            <div class="grid grid-cols-3 bg-black/60 p-2">
                 <div v-for="(row, rowIndex) in boardCells" :key="rowIndex">
                     <div v-for="(cell, colIndex) in row" :key="colIndex"
                         class="bg-zinc-200 mx-1 my-2 h-30 w-30 hover:bg-zinc-100 flex justify-center items-center text-5xl font-bold"
@@ -26,7 +27,7 @@
                 </div>
             </div>
             <button @click="restartGame"
-                class="bg-blue-400 text-white px-5 py-2 rounded-full hover:bg-blue-300">Restart</button>
+                class="bg-blue-500 font-bold text-white px-5 py-2 rounded-full hover:bg-blue-300">Restart</button>
         </div>
 
     </div>
@@ -54,13 +55,13 @@
                     this.boardCells[row][col] = this.currentPlayer;
 
                     if (this.isWinner(this.currentPlayer)) {
-                            this.winner = this.currentPlayer;
-                            this.message = `Player ${this.winner} wins!`;
+                        this.winner = this.currentPlayer;
+                        this.message = `Player ${this.winner} wins!`;
 
-                    }else if(this.isDraw(this.currentPlayer)){
-                            this.message = 'Draw!'
+                    } else if (this.isDraw(this.currentPlayer)) {
+                        this.message = 'Draw!'
                     }
-                     else {
+                    else {
                         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
                         this.message = `Player ${this.currentPlayer}'s Turn!`;
                     }
@@ -108,7 +109,7 @@
                     this.message = "Player X's Turn!";
 
                 },
-               
+
                 isDraw() {
                     for (let row = 0; row < 3; row++) {
                         for (let col = 0; col < 3; col++) {
